@@ -8,6 +8,12 @@
 __pycache__/
 *.pyc
 .env
+.venv/
+data/nyc_jobs.json
+data/job_match.sqlite3*
+data/.job-refresh-*/
+data/.nyc_jobs.json.*.tmp
+artifacts/
 
 # macOS
 .DS_Store

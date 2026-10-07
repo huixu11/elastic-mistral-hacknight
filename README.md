@@ -1,5 +1,17 @@
 # Elastic × Mistral NYC Hack Night
 
+**NYC Job Match demo:** Upload a resume and describe what you want. Search NYC government software roles and connected NYC postings from 15 private employers, including Datadog, Figma, MongoDB, Stripe, Robinhood, Brex, and Databricks. Elasticsearch retrieves jobs and filters salary and experience level; Mistral plans searches and explains matches with source quotes. This pilot does not cover all NYC jobs.
+
+Run `python -m nyc_job_match fetch`, then `python -m nyc_job_match`, and open http://127.0.0.1:8765 . Configure service keys through the UI or a local `.env`, then import into Elasticsearch. The default model is `ministral-3b-2512`, currently priced at [$0.10 per million input/output tokens each](https://docs.mistral.ai/inference/pricing). Use salary floor 0 to include new-grad and internship postings without confirmed annual pay.
+
+TXT/MD/DOCX parsing is local; PDF OCR sends the original PDF to Mistral (5 MB / 20,000-character limits). Resume originals, extracted text, saved candidate facts, drafts, and records persist in local SQLite. AI matching sends text to Mistral. Model responses are cached for 24 hours, up to 128 entries; Elasticsearch still runs every search. Replacing, editing, or clearing a resume clears derived cache/drafts while retaining candidate facts.
+
+The Datadog/Figma Greenhouse pilot prepares real questions and grounded draft answers. Optional BrowserAssistant requires Node.js, Playwright, and Edge; it attempts to prefill the official form, while the user reviews, handles CAPTCHA, and clicks Submit. Confirmation requires a specific official-page receipt; otherwise status stays unknown or self-reported. No actual application was sent to an employer. After a code update, restart the server; UI keys must be re-entered and are separate from saved resumes. Keep keys local. See [JOB_MATCH.md](JOB_MATCH.md).
+
+Real job-source fetching, Elasticsearch/Mistral integration, desktop/mobile flows, and unit/integration/fixture checks were verified. Official-page browser prefilling remains a prototype: the live Greenhouse page timed out in headless testing. PDF OCR has not been verified with a real PDF.
+
+Saved search subscriptions keep keyword, salary, and career-stage filters locally. Snapshot checks create in-app alerts once per newly matching job and exclude applied jobs; existing matches form a baseline. Checks require the local service to run and make no additional AI calls. Email and SMS alerts are not implemented.
+
 Welcome to the **Elastic × Mistral NYC Hack Night**! Tonight you'll build something that uses tech from **Elastic** and **Mistral AI** to work with **open NYC data** — a search experience, a RAG app, an analytics pipeline, an agent, a multilingual voice agent - whatever brings your idea to life. Mix and match however suits your idea.
 
 The theme is **New York City**. The city publishes an enormous amount of open data — restaurant inspections, 311 complaints, a squirrel census, live transit feeds, and much more. Your job is to turn some slice of it into something that reasons, answers, and surprises. Semantic search, a RAG chatbot, a conversational analyst, a moderation pipeline — if it combines Elastic and Mistral, we want to see it.
